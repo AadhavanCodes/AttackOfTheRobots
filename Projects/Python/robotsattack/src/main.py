@@ -1,3 +1,5 @@
+from enum import Enum
+
 import pygame
 import random
 from player import Player
@@ -49,21 +51,33 @@ bulkenemy_spawn_timer = 0
 
 game_started = False
 
+class GameMode(Enum):
+    EASY = 1
+    NORMAL = 2
+    HARD = 3
 
-def StartGameOkay():
+def StartGameWithMode(gameMode):
     global game_started, hud, local_player, enemy_spawn_timer_max, enemy_spawn_timer, enemy_spawn_speedup_timer, bulkenemy_spawn_timer_max, bulkenemy_spawn_timer
     game_started = True
     hud.state = 'ingame'
     local_player.__init__(screen, game_width / 2, game_height / 2)
-    enemy_spawn_timer_max = 1
+    if gameMode == GameMode.EASY:
+        enemy_spawn_timer_max = 200
+        bulkenemy_spawn_timer_max = 800
+    elif gameMode == GameMode.NORMAL:
+        enemy_spawn_timer_max = 100
+        bulkenemy_spawn_timer_max = 400
+    elif gameMode == GameMode.HARD:
+        enemy_spawn_timer_max = 60
+        bulkenemy_spawn_timer_max = 120
+
     enemy_spawn_timer = 0
-    bulkenemy_spawn_timer_max = 400
     bulkenemy_spawn_timer = 0
+
     enemy_spawn_speedup_timer = enemy_spawn_speedup_timer_max
     for i in range(0, 10):
         ExplosiveCrate(screen, random.randint(0, game_width), random.randint(0, game_height), local_player)
         Crate(screen, random.randint(0, game_width), random.randint(0, game_height), local_player)
-
 
 local_player = Player(screen, game_width / 2, game_height / 2)
 hud = HUD(screen, local_player)
@@ -84,9 +98,18 @@ while running:
     if not game_started:
         events = pygame.event.get()
         for event in events:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_o:
-                StartGameOkay()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_n:
+                StartGameWithMode(GameMode.NORMAL)
                 break
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+                StartGameWithMode(GameMode.EASY)
+                break
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_h:
+                StartGameWithMode(GameMode.HARD)
+                break
+            elif event.type == pygame.KEYDOWN:
+                hud.start_text = hud.hud_font.render("Invalid input, try again!"
+                                                     " E - Easy, N - Normal, H - Hard", True, (255, 255, 255))
 
     # some comments
     if game_started:
@@ -179,6 +202,7 @@ while running:
                 powerupsGroup.empty()
                 cratesGroup.empty()
                 explosionsGroup.empty()
+                hud.start_text = hud.hud_font.render("Press any key to start!", True, (255, 255, 255))
 
     hud.update()
     # Tell pygame to update the screen
