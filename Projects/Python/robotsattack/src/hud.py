@@ -16,7 +16,7 @@ class HUD():
         self.clock = pygame.time.Clock()
 
         self.title_image = pygame.image.load("../assets/Title.png")
-        self.start_text = self.hud_font.render("Press any key to start!", True, (255, 255, 255))
+        self.start_text = self.hud_font.render("Press E for Easy, N for Normal, and H for Hard!", True, (255, 255, 255))
         self.start_blink_timer_max = 80
         self.start_blink_timer = self.start_blink_timer_max
         self.tutorial_text = self.hud_font.render(

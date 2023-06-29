@@ -202,7 +202,7 @@ while running:
                 powerupsGroup.empty()
                 cratesGroup.empty()
                 explosionsGroup.empty()
-                hud.start_text = hud.hud_font.render("Press any key to start!", True, (255, 255, 255))
+                hud.start_text = hud.hud_font.render("Press E for Easy, N for Normal, and H for Hard!", True, (255, 255, 255))
 
     hud.update()
     # Tell pygame to update the screen
