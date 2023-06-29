@@ -41,6 +41,7 @@ class HUD():
         self.balloon_ammo_tile = AmmoTile(self.screen, self.normal_icon, self.hud_font)
 
     def update(self):
+        """updates the hud"""
         if self.state == 'ingame':
             tile_x = 392
             self.score_text = self.hud_font.render("Score: " + str(self.player.score), True, (255, 255, 255))
