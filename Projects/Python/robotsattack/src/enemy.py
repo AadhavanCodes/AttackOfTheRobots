@@ -133,3 +133,13 @@ class Bulky(Enemy):
             PowerUp(self.screen, self.x, self.y)
 
             self.kill()
+
+
+class Speedy(Enemy):
+    def __init__(self, screen, x, y, player):
+        Enemy.__init__(self, screen, x, y, player)
+        self.image = pygame.image.load("../assets/Speedy.png")
+        self.image_hurt = pygame.image.load("../assets/Speedy_hurt.png")
+        self.speed = 1.5
+        self.damage = 0.7
+

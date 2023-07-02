@@ -4,8 +4,7 @@ import pygame
 import random
 from player import Player
 from projectile import WaterBalloon
-from enemy import Enemy
-from enemy import Bulky
+from enemy import Enemy, Speedy, Bulky
 from crate import Crate
 from crate import ExplosiveCrate
 from explosion import Explosion
@@ -51,10 +50,12 @@ bulkenemy_spawn_timer = 0
 
 game_started = False
 
+
 class GameMode(Enum):
     EASY = 1
     NORMAL = 2
     HARD = 3
+
 
 def StartGameWithMode(gameMode):
     global game_started, hud, local_player, enemy_spawn_timer_max, enemy_spawn_timer, enemy_spawn_speedup_timer, bulkenemy_spawn_timer_max, bulkenemy_spawn_timer
@@ -78,6 +79,7 @@ def StartGameWithMode(gameMode):
     for i in range(0, 10):
         ExplosiveCrate(screen, random.randint(0, game_width), random.randint(0, game_height), local_player)
         Crate(screen, random.randint(0, game_width), random.randint(0, game_height), local_player)
+
 
 local_player = Player(screen, game_width / 2, game_height / 2)
 hud = HUD(screen, local_player)
@@ -141,19 +143,28 @@ while running:
         enemy_spawn_timer -= 1
         if enemy_spawn_timer <= 0:
             new_enemy = Enemy(screen, 0, 0, local_player)
+            new_speedy = Speedy(screen, 0, 0, local_player)
             side_to_spawn = random.randint(0, 3)
             if side_to_spawn == 0:
                 new_enemy.y = -new_enemy.image.get_height()
                 new_enemy.x = random.randint(0, game_width)
+                new_speedy.y = -new_speedy.image.get_height()
+                new_speedy.x = random.randint(0, game_width)
             elif side_to_spawn == 1:
                 new_enemy.x = random.randint(0, game_width)
                 new_enemy.y = game_height + new_enemy.image.get_height()
+                new_speedy.x = random.randint(0, game_width)
+                new_speedy.y = game_height + new_speedy.image.get_height()
             elif side_to_spawn == 2:
                 new_enemy.x = -new_enemy.image.get_width()
                 new_enemy.y = random.randint(0, game_height)
+                new_speedy.x = -new_speedy.image.get_width()
+                new_speedy.y = random.randint(0, game_height)
             elif side_to_spawn == 3:
                 new_enemy.x = game_width + new_enemy.image.get_width()
                 new_enemy.y = random.randint(0, game_height)
+                new_speedy.x = game_width + new_speedy.image.get_width()
+                new_speedy.y = random.randint(0, game_height)
             enemy_spawn_timer = enemy_spawn_timer_max
 
         bulkenemy_spawn_timer -= 1
@@ -202,7 +213,8 @@ while running:
                 powerupsGroup.empty()
                 cratesGroup.empty()
                 explosionsGroup.empty()
-                hud.start_text = hud.hud_font.render("Press E for Easy, N for Normal, and H for Hard!", True, (255, 255, 255))
+                hud.start_text = hud.hud_font.render("Press E for Easy, N for Normal, and H for Hard!", True,
+                                                     (255, 255, 255))
 
     hud.update()
     # Tell pygame to update the screen
